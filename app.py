@@ -140,11 +140,26 @@ def edit_task(id):
     response = {}
 
     if request.method == "PUT":
-        with sqlite3.connect('point_of_sale.db') as conn:
+        with sqlite3.connect('to_do_list.db') as conn:
             incoming_data = dict(request.json)
             put_data = {}
 
-            if incoming_data.get("category") is not None:
+            if incoming_data.get("category") is not None and incoming_data.get("description") is not None:
+                put_data["category"] = incoming_data.get("category")
+                put_data["description"] = incoming_data.get("description")
+                with sqlite3.connect('to_do_list.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE tasks SET category=? WHERE id=?", (put_data["category"],
+                                                                              id))
+                    conn.commit()
+
+                    cursor.execute("UPDATE tasks SET description=? WHERE id=?", (put_data["description"],
+                                                                                 id))
+                    conn.commit()
+                    response['message'] = "Updated successfully"
+                    response['status_code'] = 200
+
+            elif incoming_data.get("category") is not None:
                 put_data["category"] = incoming_data.get("category")
                 with sqlite3.connect('to_do_list.db') as conn:
                     cursor = conn.cursor()
@@ -153,7 +168,7 @@ def edit_task(id):
                     response['message'] = "Updated successfully"
                     response['status_code'] = 200
 
-            if incoming_data.get("description") is not None:
+            elif incoming_data.get("description") is not None:
                 put_data["description"] = incoming_data.get("description")
                 with sqlite3.connect('to_do_list.db') as conn:
                     cursor = conn.cursor()
