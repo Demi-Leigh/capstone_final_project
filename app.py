@@ -102,7 +102,7 @@ def registration():
 
 
 @app.route('/add-task/', methods=["POST"])
-@jwt_required()
+# # @jwt_required()
 def add_task():
     response = {}
 
@@ -122,7 +122,7 @@ def add_task():
 
 
 @app.route("/delete-task/<int:id>/")
-@jwt_required()
+# # @jwt_required()
 def delete_task(id):
     response = {}
     with sqlite3.connect("to_do_list.db") as conn:
@@ -135,7 +135,7 @@ def delete_task(id):
 
 
 @app.route('/edit-task/<int:id>/', methods=["PUT"])
-@jwt_required()
+# @jwt_required()
 def edit_task(id):
     response = {}
 
