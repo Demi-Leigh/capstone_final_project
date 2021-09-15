@@ -101,6 +101,32 @@ def registration():
         return response
 
 
+@app.route("/user_login/", methods=["POST"])
+def user_login():
+    response = {}
+
+    if request.method == "POST":
+        username = request.json['username']
+        password = request.json['password']
+
+        with sqlite3.connect("to_do_list.db") as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM users WHERE username=? AND password=?", (username,
+                                                                                   password))
+            user_info = cursor.fetchone()
+
+            response["status_code"] = 200
+            response["message"] = "User logged in successfully"
+            response["user"] = user_info
+        return response
+
+    else:
+        response["status_code"] = 404
+        response["user"] = "user not found"
+        response["message"] = "User logged in unsuccessfully"
+    return response
+
+
 @app.route('/add-task/', methods=["POST"])
 # # @jwt_required()
 def add_task():
@@ -131,6 +157,7 @@ def delete_task(id):
         conn.commit()
         response['status_code'] = 200
         response['message'] = "task deleted successfully."
+        
     return response
 
 
