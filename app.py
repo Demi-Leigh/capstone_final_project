@@ -28,8 +28,10 @@ def user_table():
 def tasks_table():
     with sqlite3.connect('to_do_list.db') as conn:
         conn.execute("CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                     "user_id INTEGER,"
                      "category TEXT NOT NULL,"
-                     "description TEXT NOT NULL)")
+                     "description TEXT NOT NULL,"
+                     "FOREIGN KEY (user_id) REFERENCES users(user_id))")
     print("today table created successfully.")
 
 
